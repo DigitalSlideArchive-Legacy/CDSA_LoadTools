@@ -1,6 +1,6 @@
 from openslide.lowlevel import OpenSlideError
-import sys
-
+import sys,os
+import openslide
 
 def clean_openslide_keys ( properties_dict ):
     """Openslide returns dictionaries that have . in the keys which mongo does not like, I need to change this to _"""
@@ -31,12 +31,11 @@ def openslide_test_file_mongo(full_file_path,file_type,db_cursor):
                 print "Openslide returned an error",full_file_path
                 print >>sys.stderr, "Verify failed with:", repr(e.args)
                 print "Openslide returned an error",full_file_path
-                f_out.write(full_file_path+';\n')
+#                f_out.write(full_file_path+';\n')
                 print "SHIT IT DIED!"
-                sys.exit()
                 
           	
-		client['corrupt_slides'].insert( { 'full_file_name': full_file_path, 'file_type': file_type, 'filesize': os.path.getsize(full_file_path) } )
+		db_cursor['CDSA_LoadErrors']['corrupt_slides'].insert( { 'full_file_name': full_file_path, 'file_type': file_type, 'filesize': os.path.getsize(full_file_path) } )
                 return(False,None,None,None,None,None,None,None)
 		      
 #                insert_corrupt_batch_stmt = "insert into `corrupt_or_unreadable_%s_files` (full_file_name,filesize) Values ('%s',%d) "
@@ -47,10 +46,12 @@ def openslide_test_file_mongo(full_file_path,file_type,db_cursor):
                 
                 #file name likely not valid
                 print >>sys.stderr, "Verify failed with:", repr(e.args)
-                print "Openslide returned an error",full_file_path
+                print "Openslide returned an error om tje StandardError block",full_file_path
                 print "SHIT IT DIED!"
-                sys.exit()
-                f_out.write(full_file_path+';\n')
+		db_cursor['CDSA_LoadErrors']['corrupt_slides'].insert( { 'full_file_name': full_file_path, 'file_type': file_type, 'filesize': os.path.getsize(full_file_path) } )
+ 
+#                sys.exit()
+#                f_out.write(full_file_path+';\n')
                 insert_corrupt_batch_stmt = "insert into `corrupt_or_unreadable_%s_files` (full_file_name,filesize) Values ('%s',%d) "
                 print insert_corrupt_batch_stmt % (file_type,full_file_path,os.path.getsize(full_file_path) )
                 

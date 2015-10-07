@@ -933,7 +933,7 @@ def find_unlinked_files( db_cursor):
 
 if __name__ == '__main__':
 	print "Nothing to do..."	
- 	(con_one,con_two) = connect_to_db('localhost', 'root', 'cancersuckz!', 'cdsa_js_prod')
+ 	#(con_one,con_two) = connect_to_db('localhost', 'root', 'cancersuckz!', 'cdsa_js_prod')
 
 	find_unlinked_files(con_one)
 
